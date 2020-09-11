@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/resources/keystore/mj.cer
+src/main/resources/keystore/mjpri.key
+src/main/resources/keystore/mjpub.pem
