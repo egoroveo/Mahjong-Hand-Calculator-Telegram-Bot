@@ -21,4 +21,15 @@ public class UpdateRequest {
     }
 
     private Message message;
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getClass().getName() + "@" + Integer.toHexString(hashCode()));
+        stringBuilder.append(" update_id: ");
+        stringBuilder.append(update_id);
+        stringBuilder.append(" message: ");
+        stringBuilder.append(message);
+        return stringBuilder.toString();
+    }
 }
