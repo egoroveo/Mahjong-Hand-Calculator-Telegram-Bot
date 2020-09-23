@@ -12,7 +12,7 @@ public class HandAnalyzerService {
 
     //TODO: Implement
     public String analyze(Hand hand) {
-        logger.debug("Analyzing hand: " + hand);
+        logger.info("Analyzing hand: " + hand);
         return "This hand is ready: " + hand.getContent();
     }
 }

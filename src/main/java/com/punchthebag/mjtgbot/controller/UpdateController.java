@@ -26,12 +26,12 @@ public class UpdateController {
 
     @RequestMapping(value = TelegramConstants.WEBHOOK_ADDRESS, method = {RequestMethod.GET, RequestMethod.POST})
     public void update(@RequestBody UpdateRequest updateRequest) {
-        logger.debug("Starting update: " + updateRequest.toString());
+        logger.info("Starting update: " + updateRequest.toString());
         //TODO: Check if several messages can be in one request
         Hand hand = new Hand(updateRequest.getMessage().getText());
         String response = handAnalyzerService.analyze(hand);
         messageSenderService.sendMessage(response, updateRequest.getMessage().getChat().getId());
-        logger.debug("Finishing update: " + updateRequest.toString());
+        logger.info("Finishing update: " + updateRequest.toString());
     }
 
 }
