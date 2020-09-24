@@ -1,7 +1,10 @@
 package com.punchthebag.mjtgbot.entity;
 
+import java.util.Map;
+
 public class Hand {
 
+    //TODO: fill tiles
     public Hand(String content) {
         this.content = content;
     }
@@ -12,4 +15,9 @@ public class Hand {
         return content;
     }
 
+    private int[] tiles;
+
+    public int[] getTiles() {
+        return tiles;
+    }
 }
