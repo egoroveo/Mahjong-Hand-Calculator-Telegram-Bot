@@ -10,9 +10,14 @@ public class HandAnalyzerService {
 
     private Logger logger = LoggerFactory.getLogger(HandAnalyzerService.class);
 
-    //TODO: Implement
+    private ShantenCalculator shantenCalculator;
+
+    public HandAnalyzerService(ShantenCalculator shantenCalculator) {
+        this.shantenCalculator = shantenCalculator;
+    }
+
     public String analyze(Hand hand) {
         logger.info("Analyzing hand: " + hand);
-        return "This hand is ready: " + hand.getContent();
+        return "Hand: " + hand.getContent() + " Shanten: " + shantenCalculator.getShanten(hand);
     }
 }

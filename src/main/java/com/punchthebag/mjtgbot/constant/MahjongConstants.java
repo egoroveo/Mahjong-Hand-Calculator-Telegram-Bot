@@ -8,7 +8,6 @@ public class MahjongConstants {
 
     public static final Integer PAIRS_COUNT_TO_WIN = 7;
     public static final Integer MAX_STANDARD_SHANTEN = 8;
-    public static final Integer NUMBER_TILES_COUNT = 27;
     public static final Integer SUIT_COUNT = 3;
     public static final Integer RANKS_COUNT = 9;
     public static final Integer HONOR_SUIT = 3;
@@ -20,14 +19,16 @@ public class MahjongConstants {
     public static final Integer SHANTEN_FOR_PAIR = 1;
     public static final Integer SHANTEN_FOR_PARTIAL_SET = 1;
 
-    public static final List<PatternType> PARTIAL_PATTERN_TYPES = Arrays.asList(new PatternType[] {
+    public static final List<PatternType> PARTIAL_PATTERN_TYPES = Arrays.asList(
             PatternType.PAIR,
             PatternType.OPEN_ENDED,
             PatternType.CLOSED
-    });
+    );
 
-    public static final List<PatternType> FULL_PATTERN_TYPES = Arrays.asList(new PatternType[] {
+    public static final List<PatternType> FULL_PATTERN_TYPES = Arrays.asList(
             PatternType.SET,
             PatternType.CONSEQUENTIAL_SET
-    });
+    );
+
+    public static final List<String> SUITS = Arrays.asList("m", "p", "s", "z");
 }
