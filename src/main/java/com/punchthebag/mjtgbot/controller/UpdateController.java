@@ -28,11 +28,16 @@ public class UpdateController {
     public void update(@RequestBody UpdateRequest updateRequest) {
         logger.info("Starting update: " + updateRequest.toString());
         //TODO: Check if several messages can be in one request
-        Hand hand = new Hand(updateRequest.getMessage().getText());
-        String response;
-        if (hand.isValid()) {
-            response = handAnalyzerService.analyze(hand);
-        } else {
+//        Hand hand = conte
+//
+//                new Hand(updateRequest.getMessage().getText());
+        String response = handAnalyzerService.analyze(updateRequest.getMessage().getText());
+//        if (hand.isValid()) {
+//            response = handAnalyzerService.analyze(hand);
+//        } else {
+//            response = "Hand is invalid";
+//        }
+        if (response == null) {
             response = "Hand is invalid";
         }
 
