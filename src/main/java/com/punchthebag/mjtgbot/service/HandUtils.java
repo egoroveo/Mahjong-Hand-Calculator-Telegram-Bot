@@ -3,71 +3,59 @@ package com.punchthebag.mjtgbot.service;
 import com.punchthebag.mjtgbot.constant.MahjongConstants;
 import com.punchthebag.mjtgbot.entity.ActionForHand;
 import com.punchthebag.mjtgbot.entity.Hand;
-import com.punchthebag.mjtgbot.entity.PartialSetType;
+import com.punchthebag.mjtgbot.entity.PatternType;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HandUtils {
 
-    //TODO: Implement
     public boolean hasTile(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
+        return hasSet(hand, rank, suit, PatternType.ONE);
     }
 
     public boolean hasPair(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean hasSet(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean hasConsequentialSet(Hand hand, int startingRank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean hasPartialSet(Hand hand, int rank, int suit, PartialSetType type) {
-        throw new UnsupportedOperationException();
+        return hasSet(hand, rank, suit, PatternType.PAIR);
     }
 
     public void addTile(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
+        addSet(hand, rank, suit, PatternType.ONE);
     }
 
     public void addPair(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void addSet(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void addConsequentialSet(Hand hand, int startingRank, int suit) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void addPartialSet(Hand hand, int startingRank, int suit, PartialSetType type) {
-        throw new UnsupportedOperationException();
+        addSet(hand, rank, suit, PatternType.PAIR);
     }
 
     public void removeTile(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
+        removeSet(hand, rank, suit, PatternType.ONE);
     }
 
     public void removePair(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
+        removeSet(hand, rank, suit, PatternType.PAIR);
     }
 
-    public void removeSet(Hand hand, int rank, int suit) {
-        throw new UnsupportedOperationException();
+    public boolean hasSet(Hand hand, int rank, int suit, PatternType type) {
+        if (rank + type.getPattern().length > MahjongConstants.RANKS_COUNT
+                || (suit == MahjongConstants.HONOR_SUIT && type.getPattern().length > 1)) {
+            return false;
+        }
+        for (int i = 0; i < type.getPattern().length; i++) {
+            if (hand.getTiles()[suit * MahjongConstants.RANKS_COUNT + rank + i] < type.getPattern()[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public void removeConsequentialSet(Hand hand, int startingRank, int suit) {
-        throw new UnsupportedOperationException();
+    public void addSet(Hand hand, int rank, int suit, PatternType type) {
+        for (int i = 0; i < type.getPattern().length; i++) {
+            hand.getTiles()[suit * MahjongConstants.RANKS_COUNT + rank + i] += type.getPattern()[i];
+        }
     }
 
-    public void removePartialSet(Hand hand, int startingRank, int suit, PartialSetType type) {
-        throw new UnsupportedOperationException();
+    public void removeSet(Hand hand, int rank, int suit, PatternType type) {
+        for (int i = 0; i < type.getPattern().length; i++) {
+            hand.getTiles()[suit * MahjongConstants.RANKS_COUNT + rank + i] -= type.getPattern()[i];
+        }
     }
 
     public boolean isOrphan(int rank, int suit) {

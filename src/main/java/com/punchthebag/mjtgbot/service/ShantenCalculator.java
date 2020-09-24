@@ -2,10 +2,11 @@ package com.punchthebag.mjtgbot.service;
 
 import com.punchthebag.mjtgbot.constant.MahjongConstants;
 import com.punchthebag.mjtgbot.entity.Hand;
-import com.punchthebag.mjtgbot.entity.PartialSetType;
+import com.punchthebag.mjtgbot.entity.PatternType;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class ShantenCalculator {
@@ -38,7 +39,7 @@ public class ShantenCalculator {
         final MutableInt shanten = new MutableInt(MahjongConstants.ORPHANS_COUNT);
 
         handUtils.forAllTiles(hand, ((rank, suit) -> {
-            if (handUtils.isOrphan(rank, suit)) {
+            if (handUtils.isOrphan(rank, suit) && handUtils.hasTile(hand, rank, suit)) {
                 shanten.decrement();
             }
         }));
@@ -82,29 +83,18 @@ public class ShantenCalculator {
 
         final MutableInt minShanten = new MutableInt(MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens);
 
-        //sets with 3 same tiles
-        handUtils.forAllTiles(hand, ((rank, suit) -> {
-            if (handUtils.hasSet(hand, rank, suit)) {
-                handUtils.removeSet(hand, rank, suit);
-                minShanten.setValue(Math.min(
-                        minShanten.intValue(),
-                        getShantenRemovingSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_SET)
-                ));
-                handUtils.addSet(hand, rank, suit);
-            }
-        }));
-
-        //consequential sets
-        handUtils.forAllTiles(hand, ((rank, suit) -> {
-            if (handUtils.hasConsequentialSet(hand, rank, suit)) {
-                handUtils.removeConsequentialSet(hand, rank, suit);
-                minShanten.setValue(Math.min(
-                        minShanten.intValue(),
-                        getShantenRemovingSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_SET)
-                ));
-                handUtils.addConsequentialSet(hand, rank, suit);
-            }
-        }));
+        for (final PatternType type : MahjongConstants.FULL_PATTERN_TYPES) {
+            handUtils.forAllTiles(hand, ((rank, suit) -> {
+                if (handUtils.hasSet(hand, rank, suit, type)) {
+                    handUtils.removeSet(hand, rank, suit, type);
+                    minShanten.setValue(Math.min(
+                            minShanten.intValue(),
+                            getShantenRemovingSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_SET)
+                    ));
+                    handUtils.addSet(hand, rank, suit, type);
+                }
+            }));
+        }
 
         // if no full sets has been found - proceeding to partial sets
         if (minShanten.intValue() == MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens) {
@@ -115,24 +105,23 @@ public class ShantenCalculator {
     }
 
     private Integer getShantenRemovingPartialSets(Hand hand, int countedShantens) {
+
         final MutableInt minShanten = new MutableInt(MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens);
 
-        //partial sets
-        for (final PartialSetType type : PartialSetType.values()) {
+        for (final PatternType type : MahjongConstants.PARTIAL_PATTERN_TYPES) {
             handUtils.forAllTiles(hand, ((rank, suit) -> {
-                if (handUtils.hasPartialSet(hand, rank, suit, type)) {
-                    handUtils.removePartialSet(hand, rank, suit, type);
+                if (handUtils.hasSet(hand, rank, suit, type)) {
+                    handUtils.removeSet(hand, rank, suit, type);
                     minShanten.setValue(Math.min(
                             minShanten.intValue(),
                             getShantenRemovingPartialSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_PARTIAL_SET)
                     ));
-                    handUtils.addPartialSet(hand, rank, suit, type);
+                    handUtils.addSet(hand, rank, suit, type);
                 }
             }));
         }
 
         return minShanten.intValue();
     }
-
 
 }

@@ -1,9 +1,8 @@
 package com.punchthebag.mjtgbot.constant;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import com.punchthebag.mjtgbot.entity.PatternType;
+
+import java.util.*;
 
 public class MahjongConstants {
 
@@ -21,5 +20,14 @@ public class MahjongConstants {
     public static final Integer SHANTEN_FOR_PAIR = 1;
     public static final Integer SHANTEN_FOR_PARTIAL_SET = 1;
 
+    public static final List<PatternType> PARTIAL_PATTERN_TYPES = Arrays.asList(new PatternType[] {
+            PatternType.PAIR,
+            PatternType.OPEN_ENDED,
+            PatternType.CLOSED
+    });
 
+    public static final List<PatternType> FULL_PATTERN_TYPES = Arrays.asList(new PatternType[] {
+            PatternType.SET,
+            PatternType.CONSEQUENTIAL_SET
+    });
 }
