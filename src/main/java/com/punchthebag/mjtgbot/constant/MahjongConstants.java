@@ -18,17 +18,25 @@ public class MahjongConstants {
     public static final Integer SHANTEN_FOR_SET = 2;
     public static final Integer SHANTEN_FOR_PAIR = 1;
     public static final Integer SHANTEN_FOR_PARTIAL_SET = 1;
+    public static final Integer HAND_TILE_COUNT = 14;
 
-    public static final List<PatternType> PARTIAL_PATTERN_TYPES = Arrays.asList(
+    public static final List<PatternType> PARTIAL_PATTERN_TYPES = Collections.unmodifiableList(Arrays.asList(
             PatternType.PAIR,
             PatternType.OPEN_ENDED,
             PatternType.CLOSED
-    );
+    ));
 
-    public static final List<PatternType> FULL_PATTERN_TYPES = Arrays.asList(
+    public static final List<PatternType> FULL_PATTERN_TYPES = Collections.unmodifiableList(Arrays.asList(
             PatternType.SET,
             PatternType.CONSEQUENTIAL_SET
-    );
+    ));
 
-    public static final List<String> SUITS = Arrays.asList("m", "p", "s", "z");
+    public static final List<Character> SUITS = Collections.unmodifiableList(Arrays.asList('m', 'p', 's', 'z'));
+
+    public static final Map<Character, Integer> SUIT_NUMBERS = Collections.unmodifiableMap(Map.of(
+            'm', 0,
+            'p', 1,
+            's', 2,
+            'z', 3
+            ));
 }

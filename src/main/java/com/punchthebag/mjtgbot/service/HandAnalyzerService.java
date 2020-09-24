@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class HandAnalyzerService {
 
-    private Logger logger = LoggerFactory.getLogger(HandAnalyzerService.class);
+    private final Logger logger = LoggerFactory.getLogger(HandAnalyzerService.class);
 
-    private ShantenCalculator shantenCalculator;
+    private final ShantenCalculator shantenCalculator;
 
     public HandAnalyzerService(ShantenCalculator shantenCalculator) {
         this.shantenCalculator = shantenCalculator;

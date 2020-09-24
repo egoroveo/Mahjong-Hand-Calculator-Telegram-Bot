@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShantenCalculator {
 
-    private HandUtils handUtils;
+    private final HandUtils handUtils;
 
     public ShantenCalculator(HandUtils handUtils) {
         this.handUtils = handUtils;

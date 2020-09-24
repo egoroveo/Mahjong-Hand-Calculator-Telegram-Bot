@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MessageSenderService {
-    private Logger logger = LoggerFactory.getLogger(MessageSenderService.class);
+    private final Logger logger = LoggerFactory.getLogger(MessageSenderService.class);
 
     @Autowired
     public MessageSenderService(RestTemplate restTemplate) {
@@ -35,7 +35,7 @@ public class MessageSenderService {
         System.out.println(result);
     }
 
-    private HttpEntity generateRequest(String message, Integer chatId) {
+    private HttpEntity<SendMessageRequest> generateRequest(String message, Integer chatId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -44,6 +44,6 @@ public class MessageSenderService {
         request.setChat_id(chatId);
         request.setText(message);
 
-        return new HttpEntity(request, headers);
+        return new HttpEntity<>(request, headers);
     }
 }

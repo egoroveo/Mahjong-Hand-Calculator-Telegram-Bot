@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UpdateController {
 
-    private Logger logger = LoggerFactory.getLogger(UpdateController.class);
+    private final Logger logger = LoggerFactory.getLogger(UpdateController.class);
 
-    private HandAnalyzerService handAnalyzerService;
-    private MessageSenderService messageSenderService;
+    private final HandAnalyzerService handAnalyzerService;
+    private final MessageSenderService messageSenderService;
 
     @Autowired
     public UpdateController(HandAnalyzerService handAnalyzerService, MessageSenderService messageSenderService) {
@@ -29,7 +29,13 @@ public class UpdateController {
         logger.info("Starting update: " + updateRequest.toString());
         //TODO: Check if several messages can be in one request
         Hand hand = new Hand(updateRequest.getMessage().getText());
-        String response = handAnalyzerService.analyze(hand);
+        String response;
+        if (hand.isValid()) {
+            response = handAnalyzerService.analyze(hand);
+        } else {
+            response = "Hand is invalid";
+        }
+
         messageSenderService.sendMessage(response, updateRequest.getMessage().getChat().getId());
         logger.info("Finishing update: " + updateRequest.toString());
     }
