@@ -7,7 +7,7 @@ public class Tile {
     private final int rank;
     private final Suit suit;
 
-    private static Tile[][] values = new Tile[MahjongConstants.RANKS_COUNT][MahjongConstants.SUIT_COUNT + 1];
+    private static final Tile[][] values = new Tile[MahjongConstants.RANKS_COUNT][MahjongConstants.SUIT_COUNT + 1];
     static {
         for (int i = 0; i < MahjongConstants.RANKS_COUNT; i++) {
             for (int j = 0; j < MahjongConstants.SUIT_COUNT + 1; j++) {

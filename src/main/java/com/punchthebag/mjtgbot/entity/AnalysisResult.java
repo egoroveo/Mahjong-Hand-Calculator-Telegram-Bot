@@ -5,13 +5,17 @@ import java.util.List;
 
 public class AnalysisResult {
 
-    private List<Tile> tiles;
+    private Hand hand;
     private List<DiscardOption> discardOptions;
     private int shanten;
 
     public AnalysisResult(Hand hand) {
-        this.tiles = hand.getTiles();
+        this.hand = hand;
         this.discardOptions = new LinkedList<>();
+    }
+
+    public Hand getHand() {
+        return hand;
     }
 
     public int getShanten() {
@@ -22,9 +26,6 @@ public class AnalysisResult {
         this.shanten = shanten;
     }
 
-    public List<Tile> getTiles() {
-        return tiles;
-    }
 
     public List<DiscardOption> getDiscardOptions() {
         return discardOptions;
