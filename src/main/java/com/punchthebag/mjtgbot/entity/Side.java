@@ -1,16 +1,16 @@
 package com.punchthebag.mjtgbot.entity;
 
-public class Out {
+public class Side {
 
     private Tile tile;
     private int amount;
 
-    public Out(Tile tile) {
+    public Side(Tile tile) {
         this.tile = tile;
         this.amount = 0;
     }
 
-    public Out(Tile tile, int amount) {
+    public Side(Tile tile, int amount) {
         this.tile = tile;
         this.amount = amount;
     }

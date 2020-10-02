@@ -41,8 +41,8 @@ public class Hand {
         List<Tile> result = new LinkedList<>();
         for (int tileType : value) {
             for (int i = 0; i < tileType; i++) {
-                Tile tile = new Tile(tileType % MahjongConstants.RANKS_COUNT,
-                        Suit.values()[tileType / MahjongConstants.RANKS_COUNT]);
+                Tile tile = Tile.of(tileType % MahjongConstants.RANKS_COUNT,
+                        tileType / MahjongConstants.RANKS_COUNT);
                 result.add(tile);
             }
         }

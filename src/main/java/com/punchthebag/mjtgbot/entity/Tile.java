@@ -1,15 +1,32 @@
 package com.punchthebag.mjtgbot.entity;
 
-import java.util.Objects;
+import com.punchthebag.mjtgbot.constant.MahjongConstants;
 
 public class Tile {
 
-    private int rank;
-    private Suit suit;
+    private final int rank;
+    private final Suit suit;
 
-    public Tile(int rank, Suit suit) {
+    private static Tile[][] values = new Tile[MahjongConstants.RANKS_COUNT][MahjongConstants.SUIT_COUNT + 1];
+    static {
+        for (int i = 0; i < MahjongConstants.RANKS_COUNT; i++) {
+            for (int j = 0; j < MahjongConstants.SUIT_COUNT + 1; j++) {
+                values[i][j] = new Tile(i, Suit.getSuit(j));
+            }
+        }
+    }
+
+    private Tile(int rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
+    }
+
+    public static Tile of(int rank, int suit) {
+        return values[rank][suit];
+    }
+
+    public static Tile of(int rank, Suit suit) {
+        return values[rank][suit.getNumber()];
     }
 
     public int getRank() {
@@ -18,23 +35,6 @@ public class Tile {
 
     public Suit getSuit() {
         return suit;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (o == this) return true;
-        if (!(o instanceof Tile)) {
-            return false;
-        }
-        Tile tile = (Tile) o;
-        return rank == tile.rank &&
-                suit == tile.suit;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(rank, suit);
     }
 
 }

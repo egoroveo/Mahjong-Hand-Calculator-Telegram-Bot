@@ -12,7 +12,9 @@ public enum Suit {
     UNKNOWN(-1, 'u');
 
     private final int number;
+
     private final char letter;
+
     Suit(int number, char letter) {
         this.number = number;
         this.letter = letter;
@@ -42,4 +44,13 @@ public enum Suit {
         }
         return UNKNOWN;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public char getLetter() {
+        return letter;
+    }
+
 }

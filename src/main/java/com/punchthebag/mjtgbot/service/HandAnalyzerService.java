@@ -46,21 +46,25 @@ public class HandAnalyzerService {
             if (hand.hasTile(rank, suit)) {
                 hand.removeTile(rank, suit);
                 if (shanten == shantenCalculator.getShanten(hand)) {
-                    final DiscardOption discardOption = new DiscardOption(new Tile(rank, Suit.getSuit(suit)));
-                    handActionsService.forAllTiles(((newRank, newSuit) -> {
-                        hand.addTile(newRank, newSuit);
-                        if (shanten > shantenCalculator.getShanten(hand)) {
-                            Tile tile = new Tile(newRank + 1, Suit.getSuit(newSuit));
-                            discardOption.addOutForTile(tile);
-                        }
-                        hand.removeTile(newRank, newSuit);
-                    }));
-                    result.getDiscardOptions().add(discardOption);
+                    Tile tileToDiscard = Tile.of(rank, suit);
+                    result.getDiscardOptions().add(calculateDiscardOption(hand, shanten, tileToDiscard));
                 }
                 hand.addTile(rank, suit);
             }
         }));
     }
 
+    private DiscardOption calculateDiscardOption(Hand hand, int shanten, Tile tileToDiscard) {
+        final DiscardOption discardOption = new DiscardOption(tileToDiscard);
+        handActionsService.forAllTiles(((newRank, newSuit) -> {
+            hand.addTile(newRank, newSuit);
+            if (shanten > shantenCalculator.getShanten(hand)) {
+                Tile tile = Tile.of(newRank + 1, newSuit);
+                discardOption.addOutForTile(tile);
+            }
+            hand.removeTile(newRank, newSuit);
+        }));
+        return discardOption;
+    }
 
 }

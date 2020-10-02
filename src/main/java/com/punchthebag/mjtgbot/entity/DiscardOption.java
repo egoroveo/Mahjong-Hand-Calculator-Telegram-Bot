@@ -6,7 +6,7 @@ import java.util.List;
 public class DiscardOption {
 
     private Tile tile;
-    private List<Out> outs;
+    private List<Side> outs;
 
     public DiscardOption(Tile tile) {
         this.tile = tile;
@@ -17,13 +17,13 @@ public class DiscardOption {
         return tile;
     }
 
-    public List<Out> getOuts() {
+    public List<Side> getOuts() {
         return outs;
     }
 
     public void addOutForTile(Tile tile) {
         boolean hasTile = false;
-        for (Out out : getOuts()) {
+        for (Side out : getOuts()) {
             if (out.getTile().equals(tile)) {
                 out.increment();
                 hasTile = true;
@@ -31,7 +31,7 @@ public class DiscardOption {
             }
         }
         if (!hasTile) {
-            outs.add(new Out(tile));
+            outs.add(new Side(tile));
         }
     }
 }
