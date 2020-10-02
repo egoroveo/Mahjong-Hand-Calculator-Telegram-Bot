@@ -1,6 +1,7 @@
 package com.punchthebag.mjtgbot.service;
 
 import com.punchthebag.mjtgbot.constant.MahjongConstants;
+import com.punchthebag.mjtgbot.entity.Suit;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -14,10 +15,10 @@ public class HandParser {
         int suit = -1;
         int tileCount = 0;
         for (int i = chars.length - 1; i >= 0; i--) {
-            if (MahjongConstants.SUITS.contains(chars[i])) {
-                suit = MahjongConstants.SUIT_NUMBERS.get(chars[i]);
+            if (Suit.SUITS.contains(chars[i])) {
+                suit = Suit.getNumberByLetter(chars[i]);
             } else if (Character.isDigit(chars[i])) {
-                int rank = chars[i] - '0';
+                int rank = chars[i] - '0' - 1;
                 if (!isSuitAndRankValid(suit, rank)) {
                     return null;
                 }
@@ -37,10 +38,7 @@ public class HandParser {
         if (suit == -1) {
             return false;
         }
-        if (suit == MahjongConstants.HONOR_SUIT && rank > 7) {
-            return false;
-        }
-        return true;
+        return suit != MahjongConstants.HONOR_SUIT || rank <= 7;
     }
 
     private char[] generateCharArray(String content) {
@@ -49,4 +47,5 @@ public class HandParser {
                 .collect(Collectors.joining())
                 .toCharArray();
     }
+
 }

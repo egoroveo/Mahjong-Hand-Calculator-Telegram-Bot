@@ -1,7 +1,11 @@
 package com.punchthebag.mjtgbot.entity;
 
+import com.punchthebag.mjtgbot.constant.MahjongConstants;
 import com.punchthebag.mjtgbot.service.HandParser;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class Hand {
@@ -10,17 +14,18 @@ public class Hand {
         this.handParser = handParser;
     }
 
-    public void init(String content) {
+    public Hand init(String content) {
         this.content = StringUtils.lowerCase(content);
-        this.tiles = handParser.parseContent(content);
-        this.valid = tiles != null;
+        this.value = handParser.parseContent(content);
+        this.valid = value != null;
+        return this;
     }
 
     private HandParser handParser;
 
     private String content;
 
-    private int[] tiles;
+    private int[] value;
 
     private boolean valid = false;
 
@@ -28,12 +33,73 @@ public class Hand {
         return content;
     }
 
-    public int[] getTiles() {
-        return tiles;
-    }
-
     public boolean isValid() {
         return valid;
+    }
+
+    public List<Tile> getTiles() {
+        List<Tile> result = new LinkedList<>();
+        for (int tileType : value) {
+            for (int i = 0; i < tileType; i++) {
+                Tile tile = new Tile(tileType % MahjongConstants.RANKS_COUNT,
+                        Suit.values()[tileType / MahjongConstants.RANKS_COUNT]);
+                result.add(tile);
+            }
+        }
+        return result;
+    }
+
+    public boolean hasTile(int rank, int suit) {
+        return hasSet(rank, suit, PatternType.ONE);
+    }
+
+    public boolean hasPair(int rank, int suit) {
+        return hasSet(rank, suit, PatternType.PAIR);
+    }
+
+    public void addTile(int rank, int suit) {
+        addSet(rank, suit, PatternType.ONE);
+    }
+
+    public void addPair(int rank, int suit) {
+        addSet(rank, suit, PatternType.PAIR);
+    }
+
+    public void removeTile(int rank, int suit) {
+        removeSet(rank, suit, PatternType.ONE);
+    }
+
+    public void removePair(int rank, int suit) {
+        removeSet(rank, suit, PatternType.PAIR);
+    }
+
+    public boolean hasSet(int rank, int suit, PatternType type) {
+        if (rank + type.getPattern().length > MahjongConstants.RANKS_COUNT
+                || (suit == MahjongConstants.HONOR_SUIT && type.getPattern().length > 1)) {
+            return false;
+        }
+        for (int i = 0; i < type.getPattern().length; i++) {
+            if (value[position(rank, suit) + i] < type.getPattern()[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addSet(int rank, int suit, PatternType type) {
+        for (int i = 0; i < type.getPattern().length; i++) {
+            value[position(rank, suit) + i] += type.getPattern()[i];
+        }
+    }
+
+    public void removeSet(int rank, int suit, PatternType type) {
+        for (int i = 0; i < type.getPattern().length; i++) {
+            value[position(rank, suit) + i] -= type.getPattern()[i];
+        }
+    }
+
+    public int position(int rank, int suit) {
+        return suit * MahjongConstants.RANKS_COUNT + rank;
     }
 
 }

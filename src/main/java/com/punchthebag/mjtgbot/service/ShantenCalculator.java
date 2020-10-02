@@ -11,22 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShantenCalculator {
 
-    private final HandUtils handUtils;
+    private final HandActionsService handActionsService;
 
-    public ShantenCalculator(HandUtils handUtils) {
-        this.handUtils = handUtils;
+    public ShantenCalculator(HandActionsService handActionsService) {
+        this.handActionsService = handActionsService;
     }
 
     public Integer getShanten(Hand hand) {
-        //TODO: Add verification
         return Math.min(Math.min(getStandardShanten(hand), getPairsShanten(hand)), getOrphansShanten(hand));
     }
 
     // tiles left for the win by getting 7 pairs
     private Integer getPairsShanten(Hand hand) {
         final MutableInt shanten = new MutableInt(MahjongConstants.PAIRS_COUNT_TO_WIN - 1);
-        handUtils.forAllTiles((rank, suit) -> {
-            if (handUtils.hasPair(hand, rank, suit)) {
+        handActionsService.forAllTiles((rank, suit) -> {
+            if (hand.hasPair(rank, suit)) {
                 shanten.decrement();
             }
         });
@@ -38,8 +37,8 @@ public class ShantenCalculator {
 
         final MutableInt shanten = new MutableInt(MahjongConstants.ORPHANS_COUNT);
 
-        handUtils.forAllTiles(((rank, suit) -> {
-            if (handUtils.isOrphan(rank, suit) && handUtils.hasTile(hand, rank, suit)) {
+        handActionsService.forAllTiles(((rank, suit) -> {
+            if (handActionsService.isOrphan(rank, suit) && hand.hasTile(rank, suit)) {
                 shanten.decrement();
             }
         }));
@@ -53,8 +52,8 @@ public class ShantenCalculator {
 
     private boolean hasOrphanPair(Hand hand) {
         MutableBoolean hasPair = new MutableBoolean(false);
-        handUtils.forAllTiles(((rank, suit) -> {
-            if (handUtils.isOrphan(rank, suit) && handUtils.hasPair(hand, rank, suit)) {
+        handActionsService.forAllTiles(((rank, suit) -> {
+            if (handActionsService.isOrphan(rank, suit) && hand.hasPair(rank, suit)) {
                 hasPair.setTrue();
             }
         }));
@@ -65,60 +64,62 @@ public class ShantenCalculator {
     private Integer getStandardShanten(Hand hand) {
         // taking a pair and recursively calculate shantens
         final MutableInt minShanten = new MutableInt(MahjongConstants.MAX_STANDARD_SHANTEN);
-        handUtils.forAllTiles(((rank, suit) -> {
-            if (handUtils.hasPair(hand, rank, suit)) {
-                handUtils.removePair(hand, rank, suit);
+        handActionsService.forAllTiles(((rank, suit) -> {
+            if (hand.hasPair(rank, suit)) {
+                hand.removePair(rank, suit);
                 minShanten.setValue(Math.min(
                         minShanten.intValue(),
-                        getShantenRemovingSets(hand, MahjongConstants.SHANTEN_FOR_PAIR)
+                        getShantenRemovingSets(hand, MahjongConstants.SHANTEN_FOR_PAIR, 1)
                 ));
-                handUtils.addPair(hand, rank, suit);
+                hand.addPair(rank, suit);
             }
         }));
-        minShanten.setValue(Math.min(minShanten.intValue(), getShantenRemovingSets(hand, 0)));
+        minShanten.setValue(Math.min(minShanten.intValue(), getShantenRemovingSets(hand, 0, 0)));
         return minShanten.intValue();
     }
 
-    private Integer getShantenRemovingSets(Hand hand, int countedShantens) {
+    private Integer getShantenRemovingSets(Hand hand, int countedShantens, int sets) {
 
         final MutableInt minShanten = new MutableInt(MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens);
 
         for (final PatternType type : MahjongConstants.FULL_PATTERN_TYPES) {
-            handUtils.forAllTiles(((rank, suit) -> {
-                if (handUtils.hasSet(hand, rank, suit, type)) {
-                    handUtils.removeSet(hand, rank, suit, type);
+            handActionsService.forAllTiles(((rank, suit) -> {
+                if (hand.hasSet(rank, suit, type)) {
+                    hand.removeSet(rank, suit, type);
                     minShanten.setValue(Math.min(
                             minShanten.intValue(),
-                            getShantenRemovingSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_SET)
+                            getShantenRemovingSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_SET, sets + 1)
                     ));
-                    handUtils.addSet(hand, rank, suit, type);
+                    hand.addSet(rank, suit, type);
                 }
             }));
         }
 
         // if no full sets has been found - proceeding to partial sets
         if (minShanten.intValue() == MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens) {
-            minShanten.setValue(Math.min(minShanten.intValue(), getShantenRemovingPartialSets(hand, countedShantens)));
+            minShanten.setValue(Math.min(minShanten.intValue(), getShantenRemovingPartialSets(hand, countedShantens, sets)));
         }
 
         return minShanten.intValue();
     }
 
-    private Integer getShantenRemovingPartialSets(Hand hand, int countedShantens) {
+    private Integer getShantenRemovingPartialSets(Hand hand, int countedShantens, int sets) {
 
         final MutableInt minShanten = new MutableInt(MahjongConstants.MAX_STANDARD_SHANTEN - countedShantens);
 
-        for (final PatternType type : MahjongConstants.PARTIAL_PATTERN_TYPES) {
-            handUtils.forAllTiles(((rank, suit) -> {
-                if (handUtils.hasSet(hand, rank, suit, type)) {
-                    handUtils.removeSet(hand, rank, suit, type);
-                    minShanten.setValue(Math.min(
-                            minShanten.intValue(),
-                            getShantenRemovingPartialSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_PARTIAL_SET)
-                    ));
-                    handUtils.addSet(hand, rank, suit, type);
-                }
-            }));
+        if (sets < MahjongConstants.MAX_SETS) {
+            for (final PatternType type : MahjongConstants.PARTIAL_PATTERN_TYPES) {
+                handActionsService.forAllTiles(((rank, suit) -> {
+                    if (hand.hasSet(rank, suit, type)) {
+                        hand.removeSet(rank, suit, type);
+                        minShanten.setValue(Math.min(
+                                minShanten.intValue(),
+                                getShantenRemovingPartialSets(hand, countedShantens + MahjongConstants.SHANTEN_FOR_PARTIAL_SET, sets + 1)
+                        ));
+                        hand.addSet(rank, suit, type);
+                    }
+                }));
+            }
         }
 
         return minShanten.intValue();

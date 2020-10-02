@@ -2,7 +2,6 @@ package com.punchthebag.mjtgbot;
 
 import com.punchthebag.mjtgbot.entity.Hand;
 import com.punchthebag.mjtgbot.service.HandParser;
-import com.punchthebag.mjtgbot.service.HandUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,4 +26,5 @@ public class MjtgbotApplication {
     public Hand hand(HandParser handParser) {
         return new Hand(handParser);
     }
+
 }

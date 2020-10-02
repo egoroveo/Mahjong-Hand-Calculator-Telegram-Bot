@@ -1,10 +1,11 @@
 package com.punchthebag.mjtgbot.controller;
 
 import com.punchthebag.mjtgbot.constant.TelegramConstants;
-import com.punchthebag.mjtgbot.entity.Hand;
+import com.punchthebag.mjtgbot.entity.AnalysisResult;
 import com.punchthebag.mjtgbot.request.UpdateRequest;
 import com.punchthebag.mjtgbot.service.HandAnalyzerService;
 import com.punchthebag.mjtgbot.service.MessageSenderService;
+import com.punchthebag.mjtgbot.view.MessageGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,32 @@ public class UpdateController {
 
     private final HandAnalyzerService handAnalyzerService;
     private final MessageSenderService messageSenderService;
+    private final MessageGenerator messageGenerator;
 
     @Autowired
-    public UpdateController(HandAnalyzerService handAnalyzerService, MessageSenderService messageSenderService) {
+    public UpdateController(HandAnalyzerService handAnalyzerService,
+                            MessageSenderService messageSenderService,
+                            MessageGenerator messageGenerator) {
         this.handAnalyzerService = handAnalyzerService;
         this.messageSenderService = messageSenderService;
+        this.messageGenerator = messageGenerator;
     }
 
     @RequestMapping(value = TelegramConstants.WEBHOOK_ADDRESS, method = {RequestMethod.GET, RequestMethod.POST})
     public void update(@RequestBody UpdateRequest updateRequest) {
         logger.info("Starting update: " + updateRequest.toString());
-        //TODO: Check if several messages can be in one request
-//        Hand hand = conte
-//
-//                new Hand(updateRequest.getMessage().getText());
-        String response = handAnalyzerService.analyze(updateRequest.getMessage().getText());
-//        if (hand.isValid()) {
-//            response = handAnalyzerService.analyze(hand);
-//        } else {
-//            response = "Hand is invalid";
-//        }
-        if (response == null) {
-            response = "Hand is invalid";
-        }
+        try {
+            AnalysisResult result = handAnalyzerService.analyze(updateRequest.getMessage().getText());
 
-        messageSenderService.sendMessage(response, updateRequest.getMessage().getChat().getId());
+            String response = messageGenerator.generateResponse(result);
+
+            if (response != null) {
+                messageSenderService.sendMessage(response, updateRequest.getMessage().getChat().getId());
+            }
+
+        } catch (Exception e) {
+            logger.warn(e.toString());
+        }
         logger.info("Finishing update: " + updateRequest.toString());
     }
 

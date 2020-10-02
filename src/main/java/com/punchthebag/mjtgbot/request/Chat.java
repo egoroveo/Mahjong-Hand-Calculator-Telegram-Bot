@@ -14,9 +14,11 @@ public class Chat {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getClass().getName() + "@" + Integer.toHexString(hashCode()));
-        stringBuilder.append(" id: ");
-        stringBuilder.append(id);
+        stringBuilder.append(getClass().getName())
+                .append("@")
+                .append(Integer.toHexString(hashCode()))
+                .append(" id: ")
+                .append(id);
         return stringBuilder.toString();
     }
 }

@@ -32,13 +32,15 @@ public class Message {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getClass().getName() + "@" + Integer.toHexString(hashCode()));
-        stringBuilder.append(" message_id: ");
-        stringBuilder.append(message_id);
-        stringBuilder.append(" text: ");
-        stringBuilder.append(text);
-        stringBuilder.append(" chat: ");
-        stringBuilder.append(chat);
+        stringBuilder.append(getClass().getName())
+                .append("@")
+                .append(Integer.toHexString(hashCode()))
+                .append(" message_id: ")
+                .append(message_id)
+                .append(" text: ")
+                .append(text)
+                .append(" chat: ")
+                .append(chat);
         return stringBuilder.toString();
     }
 }

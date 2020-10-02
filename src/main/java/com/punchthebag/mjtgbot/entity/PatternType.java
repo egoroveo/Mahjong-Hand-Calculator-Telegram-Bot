@@ -1,7 +1,5 @@
 package com.punchthebag.mjtgbot.entity;
 
-import org.springframework.security.core.parameters.P;
-
 public enum PatternType {
     ONE(1),
     PAIR(2),
@@ -12,7 +10,7 @@ public enum PatternType {
 
     private final Integer[] pattern;
 
-    private PatternType(Integer... pattern) {
+    PatternType(Integer... pattern) {
         this.pattern = pattern;
     }
 
