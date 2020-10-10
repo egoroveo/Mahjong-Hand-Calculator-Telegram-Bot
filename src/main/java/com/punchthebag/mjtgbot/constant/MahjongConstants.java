@@ -20,6 +20,7 @@ public class MahjongConstants {
     public static final Integer SHANTEN_FOR_PARTIAL_SET = 1;
     public static final Integer HAND_TILE_COUNT = 14;
     public static final Integer MAX_SETS = 4;
+    public static final Integer TILES_OF_ONE_TYPE_COUNT = 4;
 
     public static final List<PatternType> PARTIAL_PATTERN_TYPES = List.of(PatternType.PAIR, PatternType.OPEN_ENDED, PatternType.CLOSED);
 

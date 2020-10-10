@@ -29,6 +29,12 @@ public class DiscardOption {
         return count;
     }
 
+    public void addOutsForTile(Tile tile, int count) {
+        for (int i = 0; i < count; i++) {
+            addOutForTile(tile);
+        }
+    }
+
     public void addOutForTile(Tile tile) {
         boolean hasTile = false;
         for (Side out : getOuts()) {

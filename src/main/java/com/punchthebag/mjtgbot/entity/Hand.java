@@ -4,6 +4,7 @@ import com.punchthebag.mjtgbot.constant.MahjongConstants;
 import com.punchthebag.mjtgbot.service.HandParser;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Hand {
     public Hand init(String content) {
         this.content = StringUtils.lowerCase(content);
         this.value = handParser.parseContent(content);
+        this.initialValue = Arrays.copyOf(value, value.length);
         this.valid = value != null;
         return this;
     }
@@ -26,6 +28,8 @@ public class Hand {
     private String content;
 
     private int[] value;
+
+    private int[] initialValue;
 
     private boolean valid = false;
 
@@ -98,8 +102,12 @@ public class Hand {
         }
     }
 
-    public int position(int rank, int suit) {
+    private int position(int rank, int suit) {
         return suit * MahjongConstants.RANKS_COUNT + rank;
+    }
+
+    public int initialTileCount(Tile tile) {
+        return initialValue[position(tile.getRank(), tile.getSuit().getNumber())];
     }
 
 }

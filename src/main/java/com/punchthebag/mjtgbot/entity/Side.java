@@ -7,7 +7,7 @@ public class Side {
 
     public Side(Tile tile) {
         this.tile = tile;
-        this.amount = 0;
+        this.amount = 1;
     }
 
     public Side(Tile tile, int amount) {

@@ -1,5 +1,6 @@
 package com.punchthebag.mjtgbot.service;
 
+import com.punchthebag.mjtgbot.constant.MahjongConstants;
 import com.punchthebag.mjtgbot.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,6 @@ public class HandAnalyzerService {
     }
 
     private void calculateOuts(Hand hand, int shanten, AnalysisResult result) {
-
         handActionsService.forAllTiles(((rank, suit) -> {
             if (hand.hasTile(rank, suit)) {
                 hand.removeTile(rank, suit);
@@ -60,7 +60,7 @@ public class HandAnalyzerService {
             hand.addTile(newRank, newSuit);
             if (shanten > shantenCalculator.getShanten(hand)) {
                 Tile tile = Tile.of(newRank, newSuit);
-                discardOption.addOutForTile(tile);
+                discardOption.addOutsForTile(tile, MahjongConstants.TILES_OF_ONE_TYPE_COUNT - hand.initialTileCount(tile));
             }
             hand.removeTile(newRank, newSuit);
         }));

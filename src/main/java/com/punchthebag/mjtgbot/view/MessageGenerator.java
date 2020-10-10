@@ -58,9 +58,7 @@ public class MessageGenerator {
         stringBuilder.append(discardOption.getOutsCount());
         stringBuilder.append(" ");
         for (Side side : discardOption.getOuts()) {
-            for (int i = 0; i < side.getAmount(); i++) {
-                stringBuilder.append(unicodeMapper.getUnicodeSymbol(side.getTile()));
-            }
+            stringBuilder.append(unicodeMapper.getUnicodeSymbol(side.getTile()));
         }
 
         stringBuilder.append(" ");
