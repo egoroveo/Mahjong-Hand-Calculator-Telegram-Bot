@@ -59,7 +59,7 @@ public class HandAnalyzerService {
         handActionsService.forAllTiles(((newRank, newSuit) -> {
             hand.addTile(newRank, newSuit);
             if (shanten > shantenCalculator.getShanten(hand)) {
-                Tile tile = Tile.of(newRank + 1, newSuit);
+                Tile tile = Tile.of(newRank, newSuit);
                 discardOption.addOutForTile(tile);
             }
             hand.removeTile(newRank, newSuit);
