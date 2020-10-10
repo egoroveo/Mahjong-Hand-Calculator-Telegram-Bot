@@ -69,7 +69,7 @@ public class ShantenCalculator {
                 hand.removePair(rank, suit);
                 minShanten.setValue(Math.min(
                         minShanten.intValue(),
-                        getShantenRemovingSets(hand, MahjongConstants.SHANTEN_FOR_PAIR, 1)
+                        getShantenRemovingSets(hand, MahjongConstants.SHANTEN_FOR_PAIR, 0)
                 ));
                 hand.addPair(rank, suit);
             }
