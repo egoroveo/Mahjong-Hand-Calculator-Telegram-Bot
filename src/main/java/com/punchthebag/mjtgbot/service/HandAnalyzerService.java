@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+
 @Service
 public class HandAnalyzerService {
 
@@ -37,6 +39,8 @@ public class HandAnalyzerService {
         result.setShanten(shanten);
 
         calculateOuts(hand, shanten, result);
+
+        result.getDiscardOptions().sort(Comparator.comparingInt(DiscardOption::getOutsCount).reversed());
 
         return result;
     }
