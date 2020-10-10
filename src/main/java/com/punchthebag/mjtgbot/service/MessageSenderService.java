@@ -1,6 +1,9 @@
 package com.punchthebag.mjtgbot.service;
 
 import com.punchthebag.mjtgbot.constant.TelegramConstants;
+import com.punchthebag.mjtgbot.request.InlineQueryResult;
+import com.punchthebag.mjtgbot.request.InputMessageContent;
+import com.punchthebag.mjtgbot.request.SendInlineMessageRequest;
 import com.punchthebag.mjtgbot.request.SendMessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Service
 public class MessageSenderService {
@@ -26,13 +31,36 @@ public class MessageSenderService {
 
     private RestTemplate restTemplate;
 
-    public void sendMessage(String message, Integer chatId) {
-        logger.info("Sending message " + message + " to chat " + chatId);
+    public void sendMessage(String message, String id, boolean isInline) {
+        logger.info("Sending message " + message + " to chat " + id);
 
         final String uri = TelegramConstants.URL + botKey + TelegramConstants.SEND_MESSAGE_ADDRESS;
-        String result = restTemplate.postForObject(uri, generateRequest(message, chatId), String.class);
+        HttpEntity request = isInline ? generateInlineRequest(message, id) : generateRequest(message, Integer.valueOf(id));
+
+        String result = restTemplate.postForObject(uri, request, String.class);
 
         System.out.println(result);
+    }
+
+    private HttpEntity<SendInlineMessageRequest> generateInlineRequest(String message, String queryId) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        SendInlineMessageRequest request = new SendInlineMessageRequest();
+        request.setInline_query_id(queryId);
+
+        InlineQueryResult inlineQueryResult = new InlineQueryResult();
+        inlineQueryResult.setType("article");
+        inlineQueryResult.setId(queryId);
+        inlineQueryResult.setTitle("Inline Query Title");
+        InputMessageContent inputMessageContent = new InputMessageContent();
+        inputMessageContent.setMessage_text(message);
+        inlineQueryResult.setInput_message_content(inputMessageContent);
+        request.setResults(List.of(inlineQueryResult));
+
+        return new HttpEntity<>(request, headers);
+
     }
 
     private HttpEntity<SendMessageRequest> generateRequest(String message, Integer chatId) {

@@ -3,6 +3,16 @@ package com.punchthebag.mjtgbot.request;
 public class UpdateRequest {
 
     private Integer update_id;
+    private Message message;
+    private InlineQuery inlineQuery;
+
+    public InlineQuery getInlineQuery() {
+        return inlineQuery;
+    }
+
+    public void setInlineQuery(InlineQuery inlineQuery) {
+        this.inlineQuery = inlineQuery;
+    }
 
     public Integer getUpdate_id() {
         return update_id;
@@ -20,7 +30,6 @@ public class UpdateRequest {
         this.message = message;
     }
 
-    private Message message;
 
     @Override
     public String toString() {

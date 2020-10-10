@@ -33,12 +33,21 @@ public class UpdateController {
     public void update(@RequestBody UpdateRequest updateRequest) {
         logger.info("Starting update: " + updateRequest.toString());
         try {
-            AnalysisResult result = handAnalyzerService.analyze(updateRequest.getMessage().getText());
-
+            boolean isInline = updateRequest.getInlineQuery() != null;
+            String query;
+            String id;
+            if (isInline) {
+                query = updateRequest.getInlineQuery().getQuery();
+                id = updateRequest.getInlineQuery().getId();
+            } else {
+                query = updateRequest.getMessage().getText();
+                id = updateRequest.getMessage().getChat().getId().toString();
+            }
+            AnalysisResult result = handAnalyzerService.analyze(query);
             String response = messageGenerator.generateResponse(result);
 
             if (response != null) {
-                messageSenderService.sendMessage(response, updateRequest.getMessage().getChat().getId());
+                messageSenderService.sendMessage(response, id, isInline);
             }
 
         } catch (Exception e) {
@@ -46,5 +55,7 @@ public class UpdateController {
         }
         logger.info("Finishing update: " + updateRequest.toString());
     }
+
+
 
 }
