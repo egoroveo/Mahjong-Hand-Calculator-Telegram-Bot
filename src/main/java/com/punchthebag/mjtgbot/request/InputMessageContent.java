@@ -1,13 +1,6 @@
 package com.punchthebag.mjtgbot.request;
 
-public class InputMessageContent {
-    String message_text;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-    public String getMessage_text() {
-        return message_text;
-    }
-
-    public void setMessage_text(String message_text) {
-        this.message_text = message_text;
-    }
-}
+@JsonAutoDetect
+public record InputMessageContent(String message_text) {}

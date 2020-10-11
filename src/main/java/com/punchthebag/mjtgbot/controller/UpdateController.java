@@ -33,15 +33,15 @@ public class UpdateController {
     public void update(@RequestBody UpdateRequest updateRequest) {
         logger.info("Starting update: " + updateRequest.toString());
         try {
-            boolean isInline = updateRequest.getInlineQuery() != null;
+            boolean isInline = updateRequest.inlineQuery() != null;
             String query;
             String id;
             if (isInline) {
-                query = updateRequest.getInlineQuery().getQuery();
-                id = updateRequest.getInlineQuery().getId();
+                query = updateRequest.inlineQuery().query();
+                id = updateRequest.inlineQuery().id();
             } else {
-                query = updateRequest.getMessage().getText();
-                id = updateRequest.getMessage().getChat().getId().toString();
+                query = updateRequest.message().text();
+                id = updateRequest.message().chat().id().toString();
             }
             AnalysisResult result = handAnalyzerService.analyze(query);
             String response = messageGenerator.generateResponse(result);

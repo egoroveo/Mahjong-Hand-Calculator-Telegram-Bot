@@ -37,6 +37,7 @@ public class MessageSenderService {
         final String uri = TelegramConstants.URL + botKey + TelegramConstants.SEND_MESSAGE_ADDRESS;
         HttpEntity request = isInline ? generateInlineRequest(message, id) : generateRequest(message, Integer.valueOf(id));
 
+        logger.info("Request: " + request);
         String result = restTemplate.postForObject(uri, request, String.class);
 
         System.out.println(result);
@@ -47,20 +48,19 @@ public class MessageSenderService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        SendInlineMessageRequest request = new SendInlineMessageRequest();
-        request.setInline_query_id(queryId);
-
-        InlineQueryResult inlineQueryResult = new InlineQueryResult();
-        inlineQueryResult.setType("article");
-        inlineQueryResult.setId(queryId);
-        inlineQueryResult.setTitle("Inline Query Title");
-        InputMessageContent inputMessageContent = new InputMessageContent();
-        inputMessageContent.setMessage_text(message);
-        inlineQueryResult.setInput_message_content(inputMessageContent);
-        request.setResults(List.of(inlineQueryResult));
+        InputMessageContent inputMessageContent = new InputMessageContent(message);
+        InlineQueryResult inlineQueryResult = new InlineQueryResult(
+                "article",
+                queryId,
+                "Inline Query Title",
+                inputMessageContent
+        );
+        SendInlineMessageRequest request = new SendInlineMessageRequest(
+                queryId,
+                List.of(inlineQueryResult)
+        );
 
         return new HttpEntity<>(request, headers);
-
     }
 
     private HttpEntity<SendMessageRequest> generateRequest(String message, Integer chatId) {
@@ -68,9 +68,7 @@ public class MessageSenderService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        SendMessageRequest request = new SendMessageRequest();
-        request.setChat_id(chatId);
-        request.setText(message);
+        SendMessageRequest request = new SendMessageRequest(chatId, message);
 
         return new HttpEntity<>(request, headers);
     }

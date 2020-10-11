@@ -1,24 +1,5 @@
 package com.punchthebag.mjtgbot.request;
 
-public class SendMessageRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Integer getChat_id() {
-        return chat_id;
-    }
-
-    public void setChat_id(Integer chat_id) {
-        this.chat_id = chat_id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    private Integer chat_id;
-    private String text;
-
-}
+public record SendMessageRequest(@JsonProperty("chat_id") Integer chat_id, @JsonProperty("text") String text) {}
