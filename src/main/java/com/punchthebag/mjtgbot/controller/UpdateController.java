@@ -49,20 +49,22 @@ public class UpdateController {
             }
 
             if (isCommand(query)) {
-                messageSenderService.sendMessage(fixedMessagesProvider.getMessageForCommand(query), id, isInline, null);
+                messageSenderService.sendMessage(fixedMessagesProvider.getMessageForCommand(query),
+                        id, isInline, null, true);
             } else {
                 AnalysisResult result = handAnalyzerService.analyze(query);
+                boolean success = result != null;
 
-                String inlineTitle = fixedMessagesProvider.generateTitle(result != null);
+                String inlineTitle = fixedMessagesProvider.generateTitle(success);
 
                 String response;
-                if (result != null) {
+                if (success) {
                     response = messageGenerator.generateResponse(result);
                 } else {
                     response = fixedMessagesProvider.generateErrorResponse();
                 }
 
-                messageSenderService.sendMessage(response, id, isInline, inlineTitle);
+                messageSenderService.sendMessage(response, id, isInline, inlineTitle, success);
 
             }
 

@@ -9,6 +9,7 @@ public class TelegramConstants {
     public static final String COMMAND_PREFIX = "/";
     public static final String IMAGE_FOLDER = "/resources/images/";
     public static final String THUMB_IMAGE = "pin.png";
+    public static final String THUMB_ERROR_IMAGE = "cross.png";
 
     public static final Integer THUMB_WIDTH = 134;
     public static final Integer THUMB_HEIGHT = 134;
