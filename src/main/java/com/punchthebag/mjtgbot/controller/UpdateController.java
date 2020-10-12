@@ -43,11 +43,16 @@ public class UpdateController {
                 query = updateRequest.message().text();
                 id = updateRequest.message().chat().id().toString();
             }
-            AnalysisResult result = handAnalyzerService.analyze(query);
-            String response = messageGenerator.generateResponse(result);
 
-            if (response != null) {
-                messageSenderService.sendMessage(response, id, isInline);
+            if (TelegramConstants.COMMAND_START.equals(query)) {
+                messageSenderService.sendMessage(TelegramConstants.START_DESCRIPTION, id, isInline);
+            } else {
+                AnalysisResult result = handAnalyzerService.analyze(query);
+                String response = messageGenerator.generateResponse(result);
+
+                if (response != null) {
+                    messageSenderService.sendMessage(response, id, isInline);
+                }
             }
 
         } catch (Exception e) {
