@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FixedMessagesProvider {
-    public static final String START_MESSAGE = "Send some hand to me or use the example \"124578m124589p22s\"";
+    public static final String START_MESSAGE = "Send me a hand or use the example \"124578m124589p22s\"";
     public static final String NOT_SUPPORTED_MESSAGE = "Commands are not supported. Please enter a hand";
     public static final String ERROR_MESSAGE = "Invalid hand. Please provide 14 tiles";
 

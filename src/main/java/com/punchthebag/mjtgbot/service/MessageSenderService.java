@@ -29,6 +29,9 @@ public class MessageSenderService {
     @Value("${telegram_bot.key}")
     private String botKey;
 
+    @Value("${telegram_bot.server}")
+    private String botServer;
+
     private RestTemplate restTemplate;
 
     public void sendMessage(String message, String id, boolean isInline, String inlineTitle) {
@@ -54,7 +57,10 @@ public class MessageSenderService {
                 "article",
                 queryId,
                 inlineTitle,
-                inputMessageContent
+                inputMessageContent,
+                botServer + TelegramConstants.IMAGE_FOLDER + TelegramConstants.THUMB_IMAGE,
+                TelegramConstants.THUMB_WIDTH,
+                TelegramConstants.THUMB_HEIGHT
         );
         SendInlineMessageRequest request = new SendInlineMessageRequest(
                 queryId,
