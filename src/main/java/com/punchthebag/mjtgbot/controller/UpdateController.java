@@ -52,12 +52,16 @@ public class UpdateController {
                 messageSenderService.sendMessage(fixedMessagesProvider.getMessageForCommand(query), id, isInline, null);
             } else {
                 AnalysisResult result = handAnalyzerService.analyze(query);
-                String response = messageGenerator.generateResponse(result);
 
-                String inlineTitle = fixedMessagesProvider.generateTitle(response != null);
-                if (response == null) {
+                String inlineTitle = fixedMessagesProvider.generateTitle(result != null);
+
+                String response;
+                if (result != null) {
+                    response = messageGenerator.generateResponse(result);
+                } else {
                     response = fixedMessagesProvider.generateErrorResponse();
                 }
+
                 messageSenderService.sendMessage(response, id, isInline, inlineTitle);
 
             }

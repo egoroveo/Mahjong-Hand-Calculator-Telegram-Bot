@@ -18,8 +18,12 @@ public class Hand {
     public Hand init(String content) {
         this.content = StringUtils.lowerCase(content);
         this.value = handParser.parseContent(content);
-        this.initialValue = Arrays.copyOf(value, value.length);
         this.valid = value != null;
+        if (value != null) {
+            this.initialValue = Arrays.copyOf(value, value.length);
+        } else {
+            initialValue = null;
+        }
         return this;
     }
 
