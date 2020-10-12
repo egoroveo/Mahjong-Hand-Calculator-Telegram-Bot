@@ -15,18 +15,6 @@ public class Hand {
         this.handParser = handParser;
     }
 
-    public Hand init(String content) {
-        this.content = StringUtils.lowerCase(content);
-        this.value = handParser.parseContent(content);
-        this.valid = value != null;
-        if (value != null) {
-            this.initialValue = Arrays.copyOf(value, value.length);
-        } else {
-            initialValue = null;
-        }
-        return this;
-    }
-
     private HandParser handParser;
 
     private String content;
@@ -36,6 +24,28 @@ public class Hand {
     private int[] initialValue;
 
     private boolean valid = false;
+
+    public Hand init(String content) {
+        this.content = StringUtils.lowerCase(content);
+        this.value = handParser.parseContent(content);
+        if (value != null) {
+            this.initialValue = Arrays.copyOf(value, value.length);
+            this.valid = validateValue(value);
+        } else {
+            initialValue = null;
+            this.valid = false;
+        }
+        return this;
+    }
+
+    private boolean validateValue(int[] value) {
+        for (int i = 0; i < value.length; i++) {
+            if (value[i] > MahjongConstants.TILES_OF_ONE_TYPE_COUNT) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public String getContent() {
         return content;
