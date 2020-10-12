@@ -1,9 +1,6 @@
 package com.punchthebag.mjtgbot.view;
 
-import com.punchthebag.mjtgbot.entity.AnalysisResult;
-import com.punchthebag.mjtgbot.entity.DiscardOption;
-import com.punchthebag.mjtgbot.entity.Side;
-import com.punchthebag.mjtgbot.entity.Tile;
+import com.punchthebag.mjtgbot.entity.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,12 +59,23 @@ public class MessageGenerator {
         }
 
         stringBuilder.append(" ");
-        for (Side side : discardOption.getOuts()) {
-            stringBuilder.append(side.getAmount());
-            stringBuilder.append("x");
-            stringBuilder.append(side.getTile().getRank() + 1);
-            stringBuilder.append(side.getTile().getSuit().getLetter());
-            stringBuilder.append(" ");
+        stringBuilder.append(getSidesFormatted(discardOption));
+        return stringBuilder.toString();
+    }
+
+    private String getSidesFormatted(DiscardOption discardOption) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Suit suit : Suit.values()) {
+            boolean suitContainsTiles = false;
+            for (Side side : discardOption.getOuts()) {
+                if (suit.equals(side.getTile().getSuit())) {
+                    stringBuilder.append(side.getTile().getRank() + 1);
+                    suitContainsTiles = true;
+                }
+            }
+            if (suitContainsTiles) {
+                stringBuilder.append(suit.getLetter());
+            }
         }
         return stringBuilder.toString();
     }
