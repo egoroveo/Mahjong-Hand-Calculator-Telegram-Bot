@@ -5,6 +5,7 @@ import com.punchthebag.mjtgbot.entity.AnalysisResult;
 import com.punchthebag.mjtgbot.request.UpdateRequest;
 import com.punchthebag.mjtgbot.service.HandAnalyzerService;
 import com.punchthebag.mjtgbot.service.MessageSenderService;
+import com.punchthebag.mjtgbot.view.FixedMessagesProvider;
 import com.punchthebag.mjtgbot.view.MessageGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,17 @@ public class UpdateController {
     private final HandAnalyzerService handAnalyzerService;
     private final MessageSenderService messageSenderService;
     private final MessageGenerator messageGenerator;
+    private final FixedMessagesProvider fixedMessagesProvider;
 
     @Autowired
     public UpdateController(HandAnalyzerService handAnalyzerService,
                             MessageSenderService messageSenderService,
-                            MessageGenerator messageGenerator) {
+                            MessageGenerator messageGenerator,
+                            FixedMessagesProvider fixedMessagesProvider) {
         this.handAnalyzerService = handAnalyzerService;
         this.messageSenderService = messageSenderService;
         this.messageGenerator = messageGenerator;
+        this.fixedMessagesProvider = fixedMessagesProvider;
     }
 
     @RequestMapping(value = TelegramConstants.WEBHOOK_ADDRESS, method = {RequestMethod.GET, RequestMethod.POST})
@@ -44,15 +48,18 @@ public class UpdateController {
                 id = updateRequest.message().chat().id().toString();
             }
 
-            if (TelegramConstants.COMMAND_START.equals(query)) {
-                messageSenderService.sendMessage(TelegramConstants.START_DESCRIPTION, id, isInline);
+            if (isCommand(query)) {
+                messageSenderService.sendMessage(fixedMessagesProvider.getMessageForCommand(query), id, isInline, null);
             } else {
                 AnalysisResult result = handAnalyzerService.analyze(query);
                 String response = messageGenerator.generateResponse(result);
 
-                if (response != null) {
-                    messageSenderService.sendMessage(response, id, isInline);
+                String inlineTitle = fixedMessagesProvider.generateTitle(response != null);
+                if (response == null) {
+                    response = fixedMessagesProvider.generateErrorResponse();
                 }
+                messageSenderService.sendMessage(response, id, isInline, inlineTitle);
+
             }
 
         } catch (Exception e) {
@@ -62,5 +69,11 @@ public class UpdateController {
     }
 
 
+    private boolean isCommand(String query) {
+        if (query == null) {
+            return false;
+        }
+        return query.startsWith(TelegramConstants.COMMAND_PREFIX);
+    }
 
 }

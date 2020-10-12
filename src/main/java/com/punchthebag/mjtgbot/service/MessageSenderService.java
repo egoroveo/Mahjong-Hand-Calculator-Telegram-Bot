@@ -31,20 +31,20 @@ public class MessageSenderService {
 
     private RestTemplate restTemplate;
 
-    public void sendMessage(String message, String id, boolean isInline) {
+    public void sendMessage(String message, String id, boolean isInline, String inlineTitle) {
         logger.info("Sending message " + message + " to chat " + id);
 
         final String uri = TelegramConstants.URL
                 + botKey
                 + (isInline ? TelegramConstants.SEND_INLINE_MESSAGE_ADDRESS : TelegramConstants.SEND_MESSAGE_ADDRESS);
-        HttpEntity request = isInline ? generateInlineRequest(message, id) : generateRequest(message, Integer.valueOf(id));
+        HttpEntity request = isInline ? generateInlineRequest(message, id, inlineTitle) : generateRequest(message, Integer.valueOf(id));
         logger.info("Request: " + request);
         String result = restTemplate.postForObject(uri, request, String.class);
 
         System.out.println(result);
     }
 
-    private HttpEntity<SendInlineMessageRequest> generateInlineRequest(String message, String queryId) {
+    private HttpEntity<SendInlineMessageRequest> generateInlineRequest(String message, String queryId, String inlineTitle) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -53,7 +53,7 @@ public class MessageSenderService {
         InlineQueryResult inlineQueryResult = new InlineQueryResult(
                 "article",
                 queryId,
-                "Analyze hand",
+                inlineTitle,
                 inputMessageContent
         );
         SendInlineMessageRequest request = new SendInlineMessageRequest(
