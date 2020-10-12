@@ -1,3 +1,6 @@
 package com.punchthebag.mjtgbot.request;
 
-public record Chat(Integer id, String username) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record Chat(@JsonProperty("id") Integer id,
+                   @JsonProperty("username") String username) {}

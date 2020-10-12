@@ -1,9 +1,8 @@
 package com.punchthebag.mjtgbot.request;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonAutoDetect
-public record InlineQueryResult(String type,
-                                String id,
-                                String title,
-                                InputMessageContent input_message_content) {}
+public record InlineQueryResult(@JsonProperty("type") String type,
+                                @JsonProperty("id") String id,
+                                @JsonProperty("title") String title,
+                                @JsonProperty("input_message_content") InputMessageContent inputMessageContent) {}

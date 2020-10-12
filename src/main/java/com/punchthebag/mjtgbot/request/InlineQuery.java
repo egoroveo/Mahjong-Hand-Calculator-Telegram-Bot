@@ -1,3 +1,7 @@
 package com.punchthebag.mjtgbot.request;
 
-public record InlineQuery(User user, String query, String id) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record InlineQuery(@JsonProperty("user") User user,
+                          @JsonProperty("query") String query,
+                          @JsonProperty("id") String id) {}

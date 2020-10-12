@@ -1,3 +1,5 @@
 package com.punchthebag.mjtgbot.request;
 
-public record User(Integer id) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record User(@JsonProperty("id") Integer id) {}

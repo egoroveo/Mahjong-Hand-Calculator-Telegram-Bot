@@ -1,3 +1,7 @@
 package com.punchthebag.mjtgbot.request;
 
-public record Message(Integer message_id, String text, Chat chat) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record Message(@JsonProperty("message_id") Integer messageId,
+                      @JsonProperty("text") String text,
+                      @JsonProperty("chat") Chat chat) {}
