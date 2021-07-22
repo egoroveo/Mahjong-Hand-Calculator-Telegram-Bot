@@ -15,7 +15,7 @@
     <description>Telegram bot for mahjong</description>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>16</java.version>
     </properties>
 
     <dependencies>
@@ -73,8 +73,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>14</source>
-                    <target>14</target>
+                    <source>16</source>
+                    <target>16</target>
                     <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
